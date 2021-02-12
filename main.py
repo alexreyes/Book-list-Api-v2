@@ -9,7 +9,7 @@ app = Flask('app')
 app.config['JSON_AS_ASCII'] = False
 
 # CORS Support
-cors = CORS(app)
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 @app.route('/')
@@ -24,7 +24,6 @@ def index():
     return 'This is my personal books API. Written by Alex Reyes for use in www.alexreyes.xyz. Please request a specific year. For example: /?year=2021'
 
 @app.route('/', methods=["POST"])
-@cross_origin()
 def update_list(): 
   if 'year' in request.args:
     year = request.args['year']
@@ -42,8 +41,8 @@ def update_list():
       bookResult.append(individualBook)
     
     db[year] = bookResult
-    return('Successfully updated books for: ', year)
 
+    return jsonify(bookList)
   else: 
     return 'SPECIFY YEAR'
 
